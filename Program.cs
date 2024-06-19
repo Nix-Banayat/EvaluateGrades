@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Diagnostics.SymbolStore;
 
 namespace EvaluateGrades
@@ -7,72 +8,63 @@ namespace EvaluateGrades
     {
         static void Main(string[] args)
         {
-            // Get number of grades that the user wants to input
             Console.Write("Enter how many grades you want to input: ");
-            int numberOfGrades = Convert.ToInt16(Console.ReadLine());//5
+            int numberOfGrades = Convert.ToInt16(Console.ReadLine());
 
             double[] grades = new double[numberOfGrades];
 
-            //gets user input in put those in the array
-            for (int counter = 0; counter < numberOfGrades; counter++)
+            GradeChecker(grades);
+
+            Console.WriteLine("END OF USER INPUT");
+            Console.WriteLine("PROCESSING GRADES....");
+
+            double average = Average(grades);
+
+            Console.WriteLine($"Your Average Grade is: {Average(grades)}, {Remarks(average)}.");
+        }
+        public static void GradeChecker(double[] grades)
+        {
+            for (int counter = 0; counter < grades.Length; counter++)
             {
                 Console.Write("Input grade: ");
                 double grade = Convert.ToInt16(Console.ReadLine());
 
-                if (grade > 0 && grade < 100)
+                if (grade > 0 && grade <= 100)
                 {
                     grades[counter] = grade;
                 }
                 else
                 {
                     Console.WriteLine("Invalid Input.");
+                    counter --;
                 }
             }
-
-            Console.WriteLine("END OF USER INPUT");
-
-            Console.WriteLine("PROCESSING GRADES....");
-
+        }
+        public static double Sum(double[] grades)
+        {
             double sum = 0;
-
-            //access the data in the array and get their sum
-            for (int counter = 0; counter < numberOfGrades; counter++)
+            for (int counter = 0; counter < grades.Length; counter++)
             {
                 sum = sum + grades[counter];
             }
+            return sum;
+        }
+        public static double Average(double[] grades )
+        {
+            double sum = Sum(grades);
+            double average = sum / grades.Length;
 
-            double average = sum / numberOfGrades;
+            return average;
+        }
+        public static string Remarks(double average)
+        {
 
-            Console.WriteLine("The average grade is " + average);
-
-            if (average <= 50)
-            {
-                Console.WriteLine("FAILED");
-            }
-            else if (average > 50 && average <= 70)
-            {
-                Console.WriteLine("FAIR");
-            }
-            else if (average > 70 && average <= 80)
-            {
-                Console.WriteLine("GOOD");
-            }
-            else if (average > 80 && average <= 90)
-            {
-                Console.WriteLine("VERY GOOD");
-            }
-            else if (average > 90 && average <= 100)
-            {
-                Console.WriteLine("EXCELLENT");
-            }
-
-            //display all grades
-            Console.WriteLine("here are the grades given by your professor:");
-
-            for (int counter = 0; counter < numberOfGrades; counter++)
-            {
-                Console.Write(grades[counter] + "-");
-            }
+            string message = average <= 50 ? "YOU FAILED" :
+                             average > 50 && average <= 70 ? "FAIR" :
+                             average > 70 && average <= 80 ? "GOOD" :
+                             average > 80 && average <= 90 ? "VERY GOOD" :
+                             average > 90 && average <= 100 ? "EXCELLENT" : "";
+            return message;
         }
     }
 }
